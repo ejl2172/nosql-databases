@@ -1,0 +1,38 @@
+Movie: Harry Potter
+
+
+:begin
+CREATE (n: Person {firstname: "Harry", lastname: "Potter"});
+CREATE (:Person {firstname:'Lilly', lastname: "Potter"});
+CREATE (:Person {firstname:'Harry', lastname: "Potter"});
+CREATE (:Person {firstname:'Severus', lastname: "Snape"});
+CREATE (:Person {firstname:'Ginny', lastname: "Weasley"});
+CREATE (:Person {firstname:'Ron', lastname: "Weasley"});
+CREATE (:Person {firstname:'Molly', lastname: "Weasley"});
+CREATE (:Person {firstname:'Hermione', lastname: "Granger"});
+MATCH(h:Person {firstname:'James'}), (j:Person {firstname:'Lilly'}) CREATE(h)-[w:LOVES]->(j);
+MATCH(h:Person {firstname:'James'}), (j:Person {firstname:'Harry'}) CREATE(h)-[w:PARENT_OF]->(j);
+MATCH(h:Person {firstname:'James'}), (j:Person {firstname:'Lilly'}) CREATE(j)-[w:LOVES]->(h);
+MATCH(h:Person {firstname:'Lilly'}), (j:Person {firstname:'Harry'}) CREATE(h)-[w:PARENT_OF]->(j);
+MATCH(h:Person {firstname:'Severus'}), (j:Person {firstname:'Lilly'}) CREATE(h)-[w:LOVES]->(j);
+MATCH(h:Person {firstname:'Severus'}), (j:Person {firstname:'Harry'}) CREATE(h)-[w:TEACHER_OF]->(j);
+MATCH(h:Person {firstname:'Severus'}), (j:Person {firstname:'Ron'}) CREATE(h)-[w:TEACHER_OF]->(j);
+MATCH(h:Person {firstname:'Severus'}), (j:Person {firstname:'Hermione'}) CREATE(h)-[w:TEACHER_OF]->(j);
+MATCH(h:Person {firstname:'James'}), (j:Person {firstname:'Harry'}) CREATE(j)-[w:CHILD_OF]->(h);
+MATCH(h:Person {firstname:'Lilly'}), (j:Person {firstname:'Harry'}) CREATE(j)-[w:CHILD_OF]->(h);
+MATCH(h:Person {firstname:'Ron'}), (j:Person {firstname:'Harry'}) CREATE(j)-[w:FRIEND_OF]->(h);
+MATCH(h:Person {firstname:'Hermione'}), (j:Person {firstname:'Harry'}) CREATE(j)-[w:FRIEND_OF]->(h);
+MATCH(h:Person {firstname:'Harry'}), (j:Person {firstname:'Ginny'}) CREATE(h)-[w:LOVES]->(j);
+MATCH(h:Person {firstname:'Harry'}), (j:Person {firstname:'Ginny'}) CREATE(j)-[w:LOVES{since:"Book6"}]->(h);
+MATCH(h:Person {firstname:'Ginny'}), (j:Person {firstname:'Molly'}) CREATE(h)-[w:CHILD_OF]->(j);
+MATCH(h:Person {firstname:'Molly'}), (j:Person {firstname:'Ginny'}) CREATE(h)-[w:PARENT_OF]->(j);
+MATCH(h:Person {firstname:'Molly'}), (j:Person {firstname:'Ron'}) CREATE(h)-[w:PARENT_OF]->(j);
+MATCH(h:Person {firstname:'Hermione'}), (j:Person {firstname:'Harry'}) CREATE(h)-[w:FRIEND_OF{since:"Book1"}]->(j);
+MATCH(h:Person {firstname:'Hermione'}), (j:Person {firstname:'Ron'}) CREATE(h)-[w:LOVES{since:"Book7"}]->(j);
+MATCH(h:Person {firstname:'Ron'}), (j:Person {firstname:'Harry'}) CREATE(h)-[w:FRIEND_OF{since:"Book1"}]->(j);
+MATCH(h:Person {firstname:'Hermione'}), (j:Person {firstname:'Ron'}) CREATE(j)-[w:LOVES{since:"Book7"}]->(h);
+MATCH(h:Person {firstname:'Ron'}), (j:Person {firstname:'Molly'}) CREATE(h)-[w:CHILD_OF]->(j);
+:commit
+
+MATCH(h)-[r:FRIEND_OF]->(c) RETURN (h.firstname),(r),(r.since),(c.firstname); 
+MATCH(h)-[r:LOVES]->(c) RETURN (h.firstname),(r),(c.lastname),(r.since); 
